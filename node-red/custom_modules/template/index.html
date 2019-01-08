@@ -1,0 +1,27 @@
+<script type="text/javascript">
+    RED.nodes.registerType('{{modName}}',{
+        category: 'custom',
+        color: "#a6bbcf",
+        paletteLabel: "{{modName}} noop",    //optional. if missing the type name is used.
+        defaults: {
+            name: {value:"{{modName}}"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "file.png",
+        label: function() {
+            return this.name||"{{modName}}";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="{{modName}}">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="{{modName}}">
+
+</script>

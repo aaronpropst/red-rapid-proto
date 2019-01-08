@@ -1,0 +1,41 @@
+version: '3'
+ 
+services:
+
+  red:
+    image: nodered/node-red-docker:0.19.5-slim
+    # build:
+    #   context: ./node-red
+    volumes:
+      - ./node-red:/data
+      # - /data/node_modules
+    ports:
+      - 1880:1880
+
+
+  redis:
+    image: redis:5.0-rc
+    volumes:
+      - ./redis:/data
+
+
+  mqtt:
+    image: eclipse-mosquitto
+    ports: 
+      - 1883:1883
+      - 9001:9001
+    #volumes:
+      #- ./mosquitto/config/:/mosquitto/config/
+   
+
+  util:
+    #image: alpine
+    build: 
+      context: ./util
+    volumes: 
+      - ./node-red:/data
+      - ./util/:/util
+    working_dir: /util
+    command: bash
+    #entrypoint: sh -c '/stubout.sh'
+
