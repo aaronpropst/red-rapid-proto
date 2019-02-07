@@ -9,6 +9,9 @@ init:
 run:
 	docker-compose up -d
 
+link:
+	docker-compose run red ln -s ../custom_modules/$(name) ./node_modules/$(name)
+
 module:
 	docker-compose run util /util/stubout.sh $(name) && \
 	docker-compose run red ln -s ../custom_modules/$(name) ./node_modules/$(name) && \

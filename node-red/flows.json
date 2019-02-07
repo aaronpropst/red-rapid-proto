@@ -1,5 +1,12 @@
 [
     {
+        "id": "28dcf74f.ae9a18",
+        "type": "tab",
+        "label": "Basics",
+        "disabled": false,
+        "info": ""
+    },
+    {
         "id": "f9b955a3.d79c08",
         "type": "tab",
         "label": "Influx and a Chart",
@@ -14,9 +21,9 @@
         "info": ""
     },
     {
-        "id": "28dcf74f.ae9a18",
+        "id": "befb2d6f.f01db",
         "type": "tab",
-        "label": "Flow 3",
+        "label": "messing with sentiment",
         "disabled": false,
         "info": ""
     },
@@ -569,7 +576,7 @@
         "label": "numeric",
         "tooltip": "",
         "group": "47da9d8e.1ceaa4",
-        "order": 0,
+        "order": 4,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -621,8 +628,8 @@
             "#c5b0d5"
         ],
         "useOldStyle": false,
-        "x": 910,
-        "y": 360,
+        "x": 897,
+        "y": 451,
         "wires": [
             [],
             []
@@ -638,8 +645,8 @@
         "rawOutput": false,
         "precision": "",
         "retentionPolicy": "",
-        "x": 480,
-        "y": 360,
+        "x": 467,
+        "y": 451,
         "wires": [
             [
                 "79dee877.15acd8",
@@ -655,8 +662,8 @@
         "func": "msg.payload = [{\n    \"series\": [\"A\"],\n    \"data\": [ msg.payload ],\n    \"labels\": [\"\"]\n}];\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 710,
-        "y": 360,
+        "x": 697,
+        "y": 451,
         "wires": [
             [
                 "daa80265.67034"
@@ -700,8 +707,8 @@
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "x": 130,
-        "y": 360,
+        "x": 117,
+        "y": 451,
         "wires": [
             [
                 "b2c89796.9e5cb8"
@@ -733,8 +740,8 @@
         "qos": "",
         "retain": "",
         "broker": "39f813b7.3f097c",
-        "x": 370,
-        "y": 480,
+        "x": 355,
+        "y": 678,
         "wires": []
     },
     {
@@ -745,7 +752,7 @@
         "label": "MQTT Slider",
         "tooltip": "",
         "group": "47da9d8e.1ceaa4",
-        "order": 5,
+        "order": 3,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -754,8 +761,8 @@
         "min": 0,
         "max": "100",
         "step": 1,
-        "x": 130,
-        "y": 480,
+        "x": 115,
+        "y": 678,
         "wires": [
             [
                 "af0c067.06f91f8"
@@ -791,61 +798,11 @@
         "syntax": "mustache",
         "template": "select \n    time as x, \n    value as y \nfrom blah \nwhere time > now()-3m\norder by time desc ",
         "output": "str",
-        "x": 310,
-        "y": 360,
+        "x": 297,
+        "y": 451,
         "wires": [
             [
                 "26e1ca08.9c1d16"
-            ]
-        ]
-    },
-    {
-        "id": "733bb8b2.ed78a8",
-        "type": "inject",
-        "z": "28dcf74f.ae9a18",
-        "name": "",
-        "topic": "blah",
-        "payload": "",
-        "payloadType": "date",
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "x": 220,
-        "y": 220,
-        "wires": [
-            [
-                "24943c78.4ef694"
-            ]
-        ]
-    },
-    {
-        "id": "7fc13048.cce38",
-        "type": "debug",
-        "z": "28dcf74f.ae9a18",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "x": 750,
-        "y": 120,
-        "wires": []
-    },
-    {
-        "id": "24943c78.4ef694",
-        "type": "function",
-        "z": "28dcf74f.ae9a18",
-        "name": "",
-        "func": "\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 430,
-        "y": 100,
-        "wires": [
-            [
-                "7fc13048.cce38"
             ]
         ]
     },
@@ -862,8 +819,8 @@
         "storeOutMessages": true,
         "fwdInMessages": true,
         "templateScope": "local",
-        "x": 760,
-        "y": 440,
+        "x": 747,
+        "y": 531,
         "wires": [
             []
         ]
@@ -874,11 +831,81 @@
         "z": "f9b955a3.d79c08",
         "property": "payload",
         "name": "",
-        "x": 600,
-        "y": 440,
+        "x": 587,
+        "y": 531,
         "wires": [
             [
                 "ca272824.9074b8"
+            ]
+        ]
+    },
+    {
+        "id": "fbae3410.a96ee8",
+        "type": "sentiment",
+        "z": "befb2d6f.f01db",
+        "name": "",
+        "property": "payload",
+        "x": 395,
+        "y": 79,
+        "wires": [
+            [
+                "9698f0e4.8f06a"
+            ]
+        ]
+    },
+    {
+        "id": "ed4c0550.453168",
+        "type": "ui_text_input",
+        "z": "befb2d6f.f01db",
+        "name": "",
+        "label": "",
+        "tooltip": "",
+        "group": "47da9d8e.1ceaa4",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": 300,
+        "topic": "",
+        "x": 161,
+        "y": 79,
+        "wires": [
+            [
+                "fbae3410.a96ee8"
+            ]
+        ]
+    },
+    {
+        "id": "9c6483f.3f1e18",
+        "type": "ui_template",
+        "z": "befb2d6f.f01db",
+        "group": "47da9d8e.1ceaa4",
+        "name": "",
+        "order": 6,
+        "width": "6",
+        "height": "10",
+        "format": "<pre ng-bind-html=\"msg.sentiment\">\n    {{msg.sentiment}}\n</pre>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 735.5,
+        "y": 77,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9698f0e4.8f06a",
+        "type": "yaml",
+        "z": "befb2d6f.f01db",
+        "property": "sentiment",
+        "name": "",
+        "x": 564.5,
+        "y": 79,
+        "wires": [
+            [
+                "9c6483f.3f1e18"
             ]
         ]
     }
