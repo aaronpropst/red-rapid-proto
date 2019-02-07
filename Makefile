@@ -11,7 +11,5 @@ run:
 
 module:
 	docker-compose run util /util/stubout.sh $(name) && \
-	docker-compose run red npm install ./custom_modules/$(name) && \
-	docker-compose run red rm -rf node_modules/$(name) && \
 	docker-compose run red ln -s ../custom_modules/$(name) ./node_modules/$(name) && \
 	docker-compose restart red

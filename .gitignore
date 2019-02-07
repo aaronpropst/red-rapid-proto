@@ -1,3 +1,6 @@
 node_modules
 influx
 redis
+.config.json
+.*.backup
+flows_cred.json
