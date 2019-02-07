@@ -2,7 +2,16 @@
   "name": "node-red-project",
   "description": "A Node-RED Project",
   "version": "0.0.1",
+  "scripts": {
+    "start": "export NODE_PATH=/usr/src/node-red/node_modules:/data/node_modules && npm install && node $NODE_OPTIONS /usr/src/node-red/node_modules/node-red/red.js -v $FLOWS"
+  },
   "dependencies": {
-    "node-red-dashboard": "~2.10.0"
+    "node-red": "0.19.5",
+    "node-red-node-msgpack": "*",
+    "node-red-node-base64": "*",
+    "node-red-node-suncalc": "*",
+    "node-red-node-random": "*",
+    "node-red-contrib-influxdb": "~0.2.2",
+    "node-red-dashboard": "~2.13.2"
   }
 }
