@@ -73,24 +73,13 @@ Sticking SSL to anything -->
 
 # Node Red Demo
 
-* Settings File
-    - flow files
-    - authentication methods
 * Basic Flow Bits & Debugging
 * Http / Rest from Scratch
 * MQTT+Influx+Chart flow
 * Subflows
+* Settings File
+    - flow files
+    - authentication methods
 * Custom Modules
-
-
-
-urls:
-
-
-https://github.com/aaronpropst/red-rapid-proto
-
-Util Server
-https://ncint-util.hogs.swmsp.io/admin/#flow/78b411a.8d424f
-
 
 
