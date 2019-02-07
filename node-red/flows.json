@@ -1,1 +1,892 @@
-[{"id":"f9b955a3.d79c08","type":"tab","label":"Influx and a Chart","disabled":false,"info":""},{"id":"5afd317b.4fdb3","type":"tab","label":"Yaml Stuff","disabled":false,"info":""},{"id":"28dcf74f.ae9a18","type":"tab","label":"Flow 3","disabled":false,"info":""},{"id":"ea573b59.aeeca8","type":"tab","label":"Flow 4","disabled":false,"info":""},{"id":"3498542f.ed863c","type":"influxdb","z":"","hostname":"influx","port":"8086","protocol":"http","database":"test","name":"","usetls":false,"tls":""},{"id":"80939b6b.a998d8","type":"ui_tab","z":"","name":"Home","icon":"dashboard","disabled":false,"hidden":false},{"id":"47da9d8e.1ceaa4","type":"ui_group","z":"","name":"Default","tab":"80939b6b.a998d8","disp":false,"width":"12","collapse":false},{"id":"74091443.bf9b0c","type":"ui_base","theme":{"name":"theme-dark","lightTheme":{"default":"#0094CE","baseColor":"#0094CE","baseFont":"-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif","edited":true,"reset":false},"darkTheme":{"default":"#097479","baseColor":"#ff9300","baseFont":"-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif","edited":true,"reset":false},"customTheme":{"name":"Untitled Theme 1","default":"#4B7930","baseColor":"#4B7930","baseFont":"-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"},"themeState":{"base-color":{"default":"#097479","value":"#ff9300","edited":true},"page-titlebar-backgroundColor":{"value":"#ff9300","edited":false},"page-backgroundColor":{"value":"#111111","edited":false},"page-sidebar-backgroundColor":{"value":"#ffffff","edited":false},"group-textColor":{"value":"#ffb34d","edited":false},"group-borderColor":{"value":"#555555","edited":false},"group-backgroundColor":{"value":"#333333","edited":false},"widget-textColor":{"value":"#eeeeee","edited":false},"widget-backgroundColor":{"value":"#ff9300","edited":false},"widget-borderColor":{"value":"#333333","edited":false},"base-font":{"value":"-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"}},"angularTheme":{"primary":"indigo","accents":"blue","warn":"red","background":"grey"}},"site":{"name":"Node-RED Dashboard","hideToolbar":"false","allowSwipe":"false","lockMenu":"false","allowTempTheme":"true","dateFormat":"DD/MM/YYYY","sizes":{"sx":48,"sy":48,"gx":6,"gy":6,"cx":6,"cy":6,"px":0,"py":0}}},{"id":"39f813b7.3f097c","type":"mqtt-broker","z":"","name":"","broker":"mqtt","port":"1883","clientid":"","usetls":false,"compatmode":true,"keepalive":"60","cleansession":true,"birthTopic":"","birthQos":"0","birthPayload":"","closeTopic":"","closeQos":"0","closePayload":"","willTopic":"","willQos":"0","willPayload":""},{"id":"d2363245.bec43","type":"twitter-credentials","z":"","screen_name":""},{"id":"b097d11.841013","type":"ui_group","z":"","name":"Right Side","tab":"80939b6b.a998d8","disp":false,"width":"6","collapse":false},{"id":"2a32d3f4.4179cc","type":"file in","z":"5afd317b.4fdb3","name":"","filename":"","format":"utf8","chunk":false,"sendError":false,"x":430,"y":240,"wires":[["f078cee4.d9b1d"]]},{"id":"1b6c24bd.23290b","type":"split","z":"5afd317b.4fdb3","name":"","splt":"\\n","spltType":"str","arraySplt":1,"arraySpltType":"len","stream":false,"addname":"","x":90,"y":240,"wires":[["2ebe4d2a.b107b2"]]},{"id":"9df70b29.eba908","type":"template","z":"5afd317b.4fdb3","name":"clusters files list","field":"payload","fieldType":"msg","format":"handlebars","syntax":"plain","template":"/hera/clusters/aws-nonprod-euwest1-01/assets/clients.yaml\n/hera/clusters/aws-nonprod-euwest1-02/assets/clients.yaml\n/hera/clusters/aws-ops-useast1/assets/clients.yaml\n/hera/clusters/aws-prod-apsoutheast2-01/assets/clients.yaml\n/hera/clusters/aws-prod-euwest1-02/assets/clients.yaml\n/hera/clusters/aws-prod-useast1-01/assets/clients.yaml","output":"str","x":260,"y":160,"wires":[["1b6c24bd.23290b"]]},{"id":"e6bfe763.51ac58","type":"debug","z":"5afd317b.4fdb3","name":"","active":false,"tosidebar":true,"console":false,"tostatus":false,"complete":"true","x":530,"y":320,"wires":[]},{"id":"5c8bbaa2.315994","type":"inject","z":"5afd317b.4fdb3","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":100,"y":160,"wires":[["9df70b29.eba908"]]},{"id":"2ebe4d2a.b107b2","type":"change","z":"5afd317b.4fdb3","name":"","rules":[{"t":"set","p":"filename","pt":"msg","to":"payload","tot":"msg"}],"action":"","property":"","from":"","to":"","reg":false,"x":250,"y":240,"wires":[["2a32d3f4.4179cc"]]},{"id":"f078cee4.d9b1d","type":"yaml","z":"5afd317b.4fdb3","property":"payload","name":"","x":550,"y":240,"wires":[["97c1c4b7.6ca548"]]},{"id":"3a9f486f.55b8a8","type":"join","z":"5afd317b.4fdb3","name":"","mode":"custom","build":"object","property":"payload","propertyType":"msg","key":"filename","joiner":"\\n","joinerType":"str","accumulate":false,"timeout":"","count":"","reduceRight":false,"reduceExp":"","reduceInit":"","reduceInitType":"num","reduceFixup":"","x":850,"y":240,"wires":[["f5b1b769.8f2458","cb53f415.ac9ce8"]]},{"id":"97c1c4b7.6ca548","type":"function","z":"5afd317b.4fdb3","name":"reduce filename","func":"\nmsg.filename = msg.filename.match(/\\/hera\\/clusters\\/(.*)\\/assets\\/clients.yaml/)[1];\nreturn msg;","outputs":1,"noerr":0,"x":700,"y":240,"wires":[["3a9f486f.55b8a8"]]},{"id":"f5b1b769.8f2458","type":"yaml","z":"5afd317b.4fdb3","property":"payload","name":"","x":170,"y":320,"wires":[["73087344.ea418c"]]},{"id":"73087344.ea418c","type":"file","z":"5afd317b.4fdb3","name":"","filename":"/hera/all-clients.yaml","appendNewline":true,"createDir":false,"overwriteFile":"true","x":340,"y":320,"wires":[["e6bfe763.51ac58"]]},{"id":"5463ab8c.638834","type":"debug","z":"5afd317b.4fdb3","name":"","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"true","x":590,"y":500,"wires":[]},{"id":"5efe7cce.11ca64","type":"catch","z":"5afd317b.4fdb3","name":"","scope":null,"x":380,"y":500,"wires":[["5463ab8c.638834"]]},{"id":"cb53f415.ac9ce8","type":"function","z":"5afd317b.4fdb3","name":"concat and sort","func":"var clients = [];\n\nObject.keys(msg.payload).forEach(x => {\n    clients = clients.concat(msg.payload[x].clients);\n});\nmsg.payload = clients.sort(function(a, b){\n        return a.namespace.localeCompare(b.namespace);\n});\nreturn msg;","outputs":1,"noerr":0,"x":380,"y":420,"wires":[["5463ab8c.638834","454c9409.2b4a1c"]]},{"id":"454c9409.2b4a1c","type":"yaml","z":"5afd317b.4fdb3","property":"payload","name":"","x":590,"y":420,"wires":[["65f1ce5.c4f413"]]},{"id":"65f1ce5.c4f413","type":"file","z":"5afd317b.4fdb3","name":"","filename":"/hera/tenants-sorted.yaml","appendNewline":true,"createDir":false,"overwriteFile":"true","x":850,"y":420,"wires":[[]]},{"id":"baafb6be.3da958","type":"influxdb in","z":"f9b955a3.d79c08","influxdb":"3498542f.ed863c","name":"","query":"select * from blah","rawOutput":false,"precision":"","retentionPolicy":"","x":360,"y":80,"wires":[["761fe165.80758"]]},{"id":"a0c001e6.9fed5","type":"inject","z":"f9b955a3.d79c08","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":100,"y":80,"wires":[["baafb6be.3da958"]]},{"id":"761fe165.80758","type":"debug","z":"f9b955a3.d79c08","name":"","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"false","x":670,"y":80,"wires":[]},{"id":"5d1b967d.875068","type":"influxdb in","z":"f9b955a3.d79c08","influxdb":"3498542f.ed863c","name":"","query":"create database test","rawOutput":false,"precision":"","retentionPolicy":"","x":350,"y":40,"wires":[[]]},{"id":"fa2ca44c.c00068","type":"inject","z":"f9b955a3.d79c08","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":100,"y":40,"wires":[["5d1b967d.875068"]]},{"id":"8f9f6f6.98f6a9","type":"influxdb out","z":"f9b955a3.d79c08","influxdb":"3498542f.ed863c","name":"","measurement":"blah","precision":"","retentionPolicy":"","x":700,"y":160,"wires":[]},{"id":"c616461.7254eb8","type":"ui_numeric","z":"f9b955a3.d79c08","name":"","label":"numeric","tooltip":"","group":"47da9d8e.1ceaa4","order":0,"width":0,"height":0,"passthru":true,"topic":"","format":"{{value}}","min":0,"max":10,"step":1,"x":420,"y":220,"wires":[["8f9f6f6.98f6a9"]]},{"id":"daa80265.67034","type":"ui_chart","z":"f9b955a3.d79c08","name":"","group":"47da9d8e.1ceaa4","order":1,"width":0,"height":0,"label":"chart","chartType":"line","legend":"false","xformat":"HH:mm:ss","interpolate":"linear","nodata":"","dot":false,"ymin":"","ymax":"","removeOlder":1,"removeOlderPoints":"","removeOlderUnit":"86400","cutout":0,"useOneColor":false,"colors":["#ff9300","#aec7e8","#ff7f0e","#2ca02c","#98df8a","#d62728","#ff9896","#9467bd","#c5b0d5"],"useOldStyle":false,"x":910,"y":360,"wires":[[],[]]},{"id":"26e1ca08.9c1d16","type":"influxdb in","z":"f9b955a3.d79c08","influxdb":"3498542f.ed863c","name":"","query":"","rawOutput":false,"precision":"","retentionPolicy":"","x":480,"y":360,"wires":[["79dee877.15acd8","8a9087cb.4b6b18"]]},{"id":"79dee877.15acd8","type":"function","z":"f9b955a3.d79c08","name":"Format Result for Chart","func":"msg.payload = [{\n    \"series\": [\"A\"],\n    \"data\": [ msg.payload ],\n    \"labels\": [\"\"]\n}];\nreturn msg;","outputs":1,"noerr":0,"x":710,"y":360,"wires":[["daa80265.67034"]]},{"id":"bafc3a65.1b2988","type":"ui_slider","z":"f9b955a3.d79c08","name":"","label":"Local Slider","tooltip":"","group":"47da9d8e.1ceaa4","order":2,"width":0,"height":0,"passthru":true,"outs":"all","topic":"","min":0,"max":"100","step":1,"x":430,"y":280,"wires":[["8f9f6f6.98f6a9"]]},{"id":"d4b59603.15adb8","type":"inject","z":"f9b955a3.d79c08","name":"","topic":"","payload":"","payloadType":"date","repeat":"1","crontab":"","once":false,"onceDelay":0.1,"x":130,"y":360,"wires":[["b2c89796.9e5cb8"]]},{"id":"4040283d.b67638","type":"mqtt in","z":"f9b955a3.d79c08","name":"","topic":"blah","qos":"2","broker":"39f813b7.3f097c","x":70,"y":160,"wires":[["4c8b3c69.2b80b4"]]},{"id":"af0c067.06f91f8","type":"mqtt out","z":"f9b955a3.d79c08","name":"","topic":"blah","qos":"","retain":"","broker":"39f813b7.3f097c","x":370,"y":480,"wires":[]},{"id":"5d0eac56.ad0904","type":"ui_slider","z":"f9b955a3.d79c08","name":"","label":"MQTT Slider","tooltip":"","group":"47da9d8e.1ceaa4","order":5,"width":0,"height":0,"passthru":true,"outs":"all","topic":"","min":0,"max":"100","step":1,"x":130,"y":480,"wires":[["af0c067.06f91f8"]]},{"id":"4c8b3c69.2b80b4","type":"function","z":"f9b955a3.d79c08","name":"parseInt","func":"msg.payload = parseInt(msg.payload)\nreturn msg;","outputs":1,"noerr":0,"x":240,"y":160,"wires":[["8f9f6f6.98f6a9","bafc3a65.1b2988","c616461.7254eb8"]]},{"id":"b2c89796.9e5cb8","type":"template","z":"f9b955a3.d79c08","name":"select query","field":"query","fieldType":"msg","format":"handlebars","syntax":"mustache","template":"select \n    time as x, \n    value as y \nfrom blah \nwhere time > now()-3m\norder by time desc ","output":"str","x":310,"y":360,"wires":[["26e1ca08.9c1d16"]]},{"id":"733bb8b2.ed78a8","type":"inject","z":"28dcf74f.ae9a18","name":"","topic":"blah","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"onceDelay":0.1,"x":160,"y":120,"wires":[["24943c78.4ef694"]]},{"id":"7fc13048.cce38","type":"debug","z":"28dcf74f.ae9a18","name":"","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"true","x":750,"y":120,"wires":[]},{"id":"24943c78.4ef694","type":"function","z":"28dcf74f.ae9a18","name":"","func":"\nreturn msg;","outputs":1,"noerr":0,"x":430,"y":100,"wires":[["7fc13048.cce38"]]},{"id":"ca272824.9074b8","type":"ui_template","z":"f9b955a3.d79c08","group":"b097d11.841013","name":"","order":4,"width":"6","height":"10","format":"<pre ng-bind-html=\"msg.payload\">\n    {{msg.payload}}\n</pre>","storeOutMessages":true,"fwdInMessages":true,"templateScope":"local","x":760,"y":440,"wires":[[]]},{"id":"8a9087cb.4b6b18","type":"yaml","z":"f9b955a3.d79c08","property":"payload","name":"","x":600,"y":440,"wires":[["ca272824.9074b8"]]},{"id":"1bdde524.1378eb","type":"http in","z":"28dcf74f.ae9a18","name":"","url":"/test","method":"get","upload":false,"swaggerDoc":"","x":120,"y":240,"wires":[["a2f23fed.7d99d"]]},{"id":"94b29b6a.14f1c8","type":"http response","z":"28dcf74f.ae9a18","name":"","statusCode":"200","headers":{},"x":840,"y":300,"wires":[]},{"id":"4e67928.c97c76c","type":"http request","z":"28dcf74f.ae9a18","name":"","method":"GET","ret":"txt","url":"http://solarwinds.com","tls":"","x":470,"y":440,"wires":[["c794499a.d71a18"]]},{"id":"c794499a.d71a18","type":"html","z":"28dcf74f.ae9a18","name":"","property":"payload","outproperty":"payload","tag":"head","ret":"html","as":"single","x":670,"y":380,"wires":[["94b29b6a.14f1c8"]]},{"id":"a2f23fed.7d99d","type":"change","z":"28dcf74f.ae9a18","name":"","rules":[{"t":"set","p":"payload","pt":"msg","to":"hello from change.. ","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":220,"y":360,"wires":[[]]}]
+[
+    {
+        "id": "f9b955a3.d79c08",
+        "type": "tab",
+        "label": "Influx and a Chart",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "5afd317b.4fdb3",
+        "type": "tab",
+        "label": "Yaml Stuff",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "28dcf74f.ae9a18",
+        "type": "tab",
+        "label": "Flow 3",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "ea573b59.aeeca8",
+        "type": "tab",
+        "label": "Flow 4",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "3498542f.ed863c",
+        "type": "influxdb",
+        "z": "",
+        "hostname": "influx",
+        "port": "8086",
+        "protocol": "http",
+        "database": "test",
+        "name": "",
+        "usetls": false,
+        "tls": ""
+    },
+    {
+        "id": "80939b6b.a998d8",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "47da9d8e.1ceaa4",
+        "type": "ui_group",
+        "z": "",
+        "name": "Default",
+        "tab": "80939b6b.a998d8",
+        "disp": false,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "74091443.bf9b0c",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-dark",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#ff9300",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#097479",
+                    "value": "#ff9300",
+                    "edited": true
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#ff9300",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#ffb34d",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#555555",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#eeeeee",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#ff9300",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "39f813b7.3f097c",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "",
+        "broker": "mqtt",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "b097d11.841013",
+        "type": "ui_group",
+        "z": "",
+        "name": "Right Side",
+        "tab": "80939b6b.a998d8",
+        "disp": false,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "2a32d3f4.4179cc",
+        "type": "file in",
+        "z": "5afd317b.4fdb3",
+        "name": "",
+        "filename": "",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "x": 430,
+        "y": 240,
+        "wires": [
+            [
+                "f078cee4.d9b1d"
+            ]
+        ]
+    },
+    {
+        "id": "1b6c24bd.23290b",
+        "type": "split",
+        "z": "5afd317b.4fdb3",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 90,
+        "y": 240,
+        "wires": [
+            [
+                "2ebe4d2a.b107b2"
+            ]
+        ]
+    },
+    {
+        "id": "9df70b29.eba908",
+        "type": "template",
+        "z": "5afd317b.4fdb3",
+        "name": "clusters files list",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "plain",
+        "template": "/hera/clusters/aws-nonprod-euwest1-01/assets/clients.yaml\n/hera/clusters/aws-nonprod-euwest1-02/assets/clients.yaml\n/hera/clusters/aws-ops-useast1/assets/clients.yaml\n/hera/clusters/aws-prod-apsoutheast2-01/assets/clients.yaml\n/hera/clusters/aws-prod-euwest1-02/assets/clients.yaml\n/hera/clusters/aws-prod-useast1-01/assets/clients.yaml",
+        "output": "str",
+        "x": 260,
+        "y": 160,
+        "wires": [
+            [
+                "1b6c24bd.23290b"
+            ]
+        ]
+    },
+    {
+        "id": "e6bfe763.51ac58",
+        "type": "debug",
+        "z": "5afd317b.4fdb3",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 530,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "5c8bbaa2.315994",
+        "type": "inject",
+        "z": "5afd317b.4fdb3",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 100,
+        "y": 160,
+        "wires": [
+            [
+                "9df70b29.eba908"
+            ]
+        ]
+    },
+    {
+        "id": "2ebe4d2a.b107b2",
+        "type": "change",
+        "z": "5afd317b.4fdb3",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "filename",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 250,
+        "y": 240,
+        "wires": [
+            [
+                "2a32d3f4.4179cc"
+            ]
+        ]
+    },
+    {
+        "id": "f078cee4.d9b1d",
+        "type": "yaml",
+        "z": "5afd317b.4fdb3",
+        "property": "payload",
+        "name": "",
+        "x": 550,
+        "y": 240,
+        "wires": [
+            [
+                "97c1c4b7.6ca548"
+            ]
+        ]
+    },
+    {
+        "id": "3a9f486f.55b8a8",
+        "type": "join",
+        "z": "5afd317b.4fdb3",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "filename",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 850,
+        "y": 240,
+        "wires": [
+            [
+                "f5b1b769.8f2458",
+                "cb53f415.ac9ce8"
+            ]
+        ]
+    },
+    {
+        "id": "97c1c4b7.6ca548",
+        "type": "function",
+        "z": "5afd317b.4fdb3",
+        "name": "reduce filename",
+        "func": "\nmsg.filename = msg.filename.match(/\\/hera\\/clusters\\/(.*)\\/assets\\/clients.yaml/)[1];\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 700,
+        "y": 240,
+        "wires": [
+            [
+                "3a9f486f.55b8a8"
+            ]
+        ]
+    },
+    {
+        "id": "f5b1b769.8f2458",
+        "type": "yaml",
+        "z": "5afd317b.4fdb3",
+        "property": "payload",
+        "name": "",
+        "x": 170,
+        "y": 320,
+        "wires": [
+            [
+                "73087344.ea418c"
+            ]
+        ]
+    },
+    {
+        "id": "73087344.ea418c",
+        "type": "file",
+        "z": "5afd317b.4fdb3",
+        "name": "",
+        "filename": "/hera/all-clients.yaml",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "x": 340,
+        "y": 320,
+        "wires": [
+            [
+                "e6bfe763.51ac58"
+            ]
+        ]
+    },
+    {
+        "id": "5463ab8c.638834",
+        "type": "debug",
+        "z": "5afd317b.4fdb3",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 590,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "5efe7cce.11ca64",
+        "type": "catch",
+        "z": "5afd317b.4fdb3",
+        "name": "",
+        "scope": null,
+        "x": 380,
+        "y": 500,
+        "wires": [
+            [
+                "5463ab8c.638834"
+            ]
+        ]
+    },
+    {
+        "id": "cb53f415.ac9ce8",
+        "type": "function",
+        "z": "5afd317b.4fdb3",
+        "name": "concat and sort",
+        "func": "var clients = [];\n\nObject.keys(msg.payload).forEach(x => {\n    clients = clients.concat(msg.payload[x].clients);\n});\nmsg.payload = clients.sort(function(a, b){\n        return a.namespace.localeCompare(b.namespace);\n});\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 380,
+        "y": 420,
+        "wires": [
+            [
+                "5463ab8c.638834",
+                "454c9409.2b4a1c"
+            ]
+        ]
+    },
+    {
+        "id": "454c9409.2b4a1c",
+        "type": "yaml",
+        "z": "5afd317b.4fdb3",
+        "property": "payload",
+        "name": "",
+        "x": 590,
+        "y": 420,
+        "wires": [
+            [
+                "65f1ce5.c4f413"
+            ]
+        ]
+    },
+    {
+        "id": "65f1ce5.c4f413",
+        "type": "file",
+        "z": "5afd317b.4fdb3",
+        "name": "",
+        "filename": "/hera/tenants-sorted.yaml",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "x": 850,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "baafb6be.3da958",
+        "type": "influxdb in",
+        "z": "f9b955a3.d79c08",
+        "influxdb": "3498542f.ed863c",
+        "name": "",
+        "query": "select * from blah",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "x": 360,
+        "y": 80,
+        "wires": [
+            [
+                "761fe165.80758"
+            ]
+        ]
+    },
+    {
+        "id": "a0c001e6.9fed5",
+        "type": "inject",
+        "z": "f9b955a3.d79c08",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 100,
+        "y": 80,
+        "wires": [
+            [
+                "baafb6be.3da958"
+            ]
+        ]
+    },
+    {
+        "id": "761fe165.80758",
+        "type": "debug",
+        "z": "f9b955a3.d79c08",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 670,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "5d1b967d.875068",
+        "type": "influxdb in",
+        "z": "f9b955a3.d79c08",
+        "influxdb": "3498542f.ed863c",
+        "name": "",
+        "query": "create database test",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "x": 350,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fa2ca44c.c00068",
+        "type": "inject",
+        "z": "f9b955a3.d79c08",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 100,
+        "y": 40,
+        "wires": [
+            [
+                "5d1b967d.875068"
+            ]
+        ]
+    },
+    {
+        "id": "8f9f6f6.98f6a9",
+        "type": "influxdb out",
+        "z": "f9b955a3.d79c08",
+        "influxdb": "3498542f.ed863c",
+        "name": "",
+        "measurement": "blah",
+        "precision": "",
+        "retentionPolicy": "",
+        "x": 700,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "c616461.7254eb8",
+        "type": "ui_numeric",
+        "z": "f9b955a3.d79c08",
+        "name": "",
+        "label": "numeric",
+        "tooltip": "",
+        "group": "47da9d8e.1ceaa4",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "x": 420,
+        "y": 220,
+        "wires": [
+            [
+                "8f9f6f6.98f6a9"
+            ]
+        ]
+    },
+    {
+        "id": "daa80265.67034",
+        "type": "ui_chart",
+        "z": "f9b955a3.d79c08",
+        "name": "",
+        "group": "47da9d8e.1ceaa4",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#ff9300",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 910,
+        "y": 360,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "26e1ca08.9c1d16",
+        "type": "influxdb in",
+        "z": "f9b955a3.d79c08",
+        "influxdb": "3498542f.ed863c",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "x": 480,
+        "y": 360,
+        "wires": [
+            [
+                "79dee877.15acd8",
+                "8a9087cb.4b6b18"
+            ]
+        ]
+    },
+    {
+        "id": "79dee877.15acd8",
+        "type": "function",
+        "z": "f9b955a3.d79c08",
+        "name": "Format Result for Chart",
+        "func": "msg.payload = [{\n    \"series\": [\"A\"],\n    \"data\": [ msg.payload ],\n    \"labels\": [\"\"]\n}];\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 710,
+        "y": 360,
+        "wires": [
+            [
+                "daa80265.67034"
+            ]
+        ]
+    },
+    {
+        "id": "bafc3a65.1b2988",
+        "type": "ui_slider",
+        "z": "f9b955a3.d79c08",
+        "name": "",
+        "label": "Local Slider",
+        "tooltip": "",
+        "group": "47da9d8e.1ceaa4",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "",
+        "min": 0,
+        "max": "100",
+        "step": 1,
+        "x": 430,
+        "y": 280,
+        "wires": [
+            [
+                "8f9f6f6.98f6a9"
+            ]
+        ]
+    },
+    {
+        "id": "d4b59603.15adb8",
+        "type": "inject",
+        "z": "f9b955a3.d79c08",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 360,
+        "wires": [
+            [
+                "b2c89796.9e5cb8"
+            ]
+        ]
+    },
+    {
+        "id": "4040283d.b67638",
+        "type": "mqtt in",
+        "z": "f9b955a3.d79c08",
+        "name": "",
+        "topic": "blah",
+        "qos": "2",
+        "broker": "39f813b7.3f097c",
+        "x": 70,
+        "y": 160,
+        "wires": [
+            [
+                "4c8b3c69.2b80b4"
+            ]
+        ]
+    },
+    {
+        "id": "af0c067.06f91f8",
+        "type": "mqtt out",
+        "z": "f9b955a3.d79c08",
+        "name": "",
+        "topic": "blah",
+        "qos": "",
+        "retain": "",
+        "broker": "39f813b7.3f097c",
+        "x": 370,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "5d0eac56.ad0904",
+        "type": "ui_slider",
+        "z": "f9b955a3.d79c08",
+        "name": "",
+        "label": "MQTT Slider",
+        "tooltip": "",
+        "group": "47da9d8e.1ceaa4",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "",
+        "min": 0,
+        "max": "100",
+        "step": 1,
+        "x": 130,
+        "y": 480,
+        "wires": [
+            [
+                "af0c067.06f91f8"
+            ]
+        ]
+    },
+    {
+        "id": "4c8b3c69.2b80b4",
+        "type": "function",
+        "z": "f9b955a3.d79c08",
+        "name": "parseInt",
+        "func": "msg.payload = parseInt(msg.payload)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 240,
+        "y": 160,
+        "wires": [
+            [
+                "8f9f6f6.98f6a9",
+                "bafc3a65.1b2988",
+                "c616461.7254eb8"
+            ]
+        ]
+    },
+    {
+        "id": "b2c89796.9e5cb8",
+        "type": "template",
+        "z": "f9b955a3.d79c08",
+        "name": "select query",
+        "field": "query",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "select \n    time as x, \n    value as y \nfrom blah \nwhere time > now()-3m\norder by time desc ",
+        "output": "str",
+        "x": 310,
+        "y": 360,
+        "wires": [
+            [
+                "26e1ca08.9c1d16"
+            ]
+        ]
+    },
+    {
+        "id": "733bb8b2.ed78a8",
+        "type": "inject",
+        "z": "28dcf74f.ae9a18",
+        "name": "",
+        "topic": "blah",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 160,
+        "y": 120,
+        "wires": [
+            [
+                "24943c78.4ef694"
+            ]
+        ]
+    },
+    {
+        "id": "7fc13048.cce38",
+        "type": "debug",
+        "z": "28dcf74f.ae9a18",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 750,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "24943c78.4ef694",
+        "type": "function",
+        "z": "28dcf74f.ae9a18",
+        "name": "",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 430,
+        "y": 100,
+        "wires": [
+            [
+                "7fc13048.cce38"
+            ]
+        ]
+    },
+    {
+        "id": "ca272824.9074b8",
+        "type": "ui_template",
+        "z": "f9b955a3.d79c08",
+        "group": "b097d11.841013",
+        "name": "",
+        "order": 4,
+        "width": "6",
+        "height": "10",
+        "format": "<pre ng-bind-html=\"msg.payload\">\n    {{msg.payload}}\n</pre>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 760,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8a9087cb.4b6b18",
+        "type": "yaml",
+        "z": "f9b955a3.d79c08",
+        "property": "payload",
+        "name": "",
+        "x": 600,
+        "y": 440,
+        "wires": [
+            [
+                "ca272824.9074b8"
+            ]
+        ]
+    }
+]
